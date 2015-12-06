@@ -1,0 +1,26 @@
+0000 - 0  - nop  - do nothing for one cycle
+0001 - 1  - adda - add num at address to the accumulator
+0010 - 2  - addm - add num in accumulator to address
+0011 - 3  - suba - sub num at address from accumulator
+0100 - 4  - subm - sub num in address from accumulator
+0101 - 5  - cla  - clear accumulator
+0110 - 6  - clm  - clear memory at address
+0111 - 7  - jmp  - jump to address
+1000 - 8  - jin  - jump if the accumulator is negative
+1001 - 9  - out  - retrieve data from device at address, store into accumulator
+1010 - 10 - in   - send data from accumulator to device at address
+1011 - 11 - mova - move value at address to the accumulator
+1100 - 12 - movm - move value in accumulator to address
+1101 - 13 - stoa - store argument into accumulator, uses last 8 bits only
+1110 - 14 - eq   - if accumulator and value at address are equal, store 255 into
+                   accumulator
+1111 - 15 - nop  - do nothing for one cycle (placeholder, might do something
+                   in the future)
+
+1010 | 101010101010
+op     address
+
+
+16-bit word, 8-bit data
+12-bit address space
+max of 4096 memory locations and 4096 devices
