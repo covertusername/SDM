@@ -11,3 +11,5 @@ It has a 16-bit word size and an 8-bit data size. The leftmost 4 bits define the
 instruction, and the rest define the data that the instruction works with. Only
 the `stoa` instruction actually uses this as data, the rest either don't use it
 at all or use it to reference a memory or device address.
+
+Futher details are located within the "specs" file.
