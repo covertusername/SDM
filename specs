@@ -2,7 +2,7 @@
 0001 - 1  - adda - add num at address to the accumulator
 0010 - 2  - addm - add num in accumulator to address
 0011 - 3  - suba - sub num at address from accumulator
-0100 - 4  - subm - sub num in address from accumulator
+0100 - 4  - subm - sub num in accumulator from address
 0101 - 5  - cla  - clear accumulator
 0110 - 6  - clm  - clear memory at address
 0111 - 7  - jmp  - jump to address
