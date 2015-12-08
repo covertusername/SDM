@@ -11,6 +11,9 @@
 
 char *memory;
 int memoryImage = 0;
+int lIByte = 0;
+int rIByte = 1;
+int16_t instruction = 0;
 
 int main(int argc, char **argv){
     memoryImage = open(argv[1], 0);
@@ -20,7 +23,9 @@ int main(int argc, char **argv){
     }
     memory = calloc(1, 4096);
     read(memoryImage, memory, 4096);
-
+    while(1){
+        instruction = memory[rIByte] | (memory[lIByte] << 8);
+    }
     free(memory)
     return 0;
 }
