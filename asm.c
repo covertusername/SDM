@@ -18,6 +18,7 @@ int main(int argc, char **argv){
     char *mnemonic;
     int16_t instruction;
     char *addressString = "a";
+    char *delimitor = {' ', '\x0A', '\0'};
 
     if (argv[1] == NULL){
         fprintf(stderr, "Usage: %s filename\n", argv[0]);
@@ -34,49 +35,49 @@ int main(int argc, char **argv){
         exit(2);
     }
     while (getline(&line, &len, asmsource) != -1) {
-        mnemonic = strtok(line, " ");
+        mnemonic = strtok(line, delimitor);
         if (!strcmp(mnemonic, "nop")){
             instruction = 0;
         } else if (!strcmp(mnemonic, "adda")){
-            addressString = strtok(NULL, " ");
+            addressString = strtok(NULL, delimitor);
             instruction = 0x1000 + (int16_t)strtol(addressString, NULL, 0);
         } else if (!strcmp(mnemonic, "addm")){
-            addressString = strtok(NULL, " ");
+            addressString = strtok(NULL, delimitor);
             instruction = 0x2000 + (int16_t)strtol(addressString, NULL, 0);
         } else if (!strcmp(mnemonic, "suba")){
-            addressString = strtok(NULL, " ");
+            addressString = strtok(NULL, delimitor);
             instruction = 0x3000 + (int16_t)strtol(addressString, NULL, 0);
         } else if (!strcmp(mnemonic, "subm")){
-            addressString = strtok(NULL, " ");
+            addressString = strtok(NULL, delimitor);
             instruction = 0x4000 + (int16_t)strtol(addressString, NULL, 0);
         } else if (!strcmp(mnemonic, "cla")){
             instruction = 0x5000;
         } else if (!strcmp(mnemonic, "clm")){
-            addressString = strtok(NULL, " ");
+            addressString = strtok(NULL, delimitor);
             instruction = 0x6000 + (int16_t)strtol(addressString, NULL, 0);
         } else if (!strcmp(mnemonic, "jmp")){
-            addressString = strtok(NULL, " ");
+            addressString = strtok(NULL, delimitor);
             instruction = 0x7000 + (int16_t)strtol(addressString, NULL, 0);
         } else if (!strcmp(mnemonic, "jin")){
-            addressString = strtok(NULL, " ");
+            addressString = strtok(NULL, delimitor);
             instruction = 0x8000 + (int16_t)strtol(addressString, NULL, 0);
         } else if (!strcmp(mnemonic, "out")){
-            addressString = strtok(NULL, " ");
+            addressString = strtok(NULL, delimitor);
             instruction = 0x9000 + (int16_t)strtol(addressString, NULL, 0);
         } else if (!strcmp(mnemonic, "in")){
-            addressString = strtok(NULL, " ");
+            addressString = strtok(NULL, delimitor);
             instruction = 0xA000 + (int16_t)strtol(addressString, NULL, 0);
         } else if (!strcmp(mnemonic, "mova")){
-            addressString = strtok(NULL, " ");
+            addressString = strtok(NULL, delimitor);
             instruction = 0xB000 + (int16_t)strtol(addressString, NULL, 0);
         } else if (!strcmp(mnemonic, "movm")){
-            addressString = strtok(NULL, " ");
+            addressString = strtok(NULL, delimitor);
             instruction = 0xC000 + (int16_t)strtol(addressString, NULL, 0);
         } else if (!strcmp(mnemonic, "stoa")){
-            addressString = strtok(NULL, " ");
+            addressString = strtok(NULL, delimitor);
             instruction = 0xD000 + (int16_t)strtol(addressString, NULL, 0);
         } else if (!strcmp(mnemonic, "eq")){
-            addressString = strtok(NULL, " ");
+            addressString = strtok(NULL, delimitor);
             instruction = 0xE000 + (int16_t)strtol(addressString, NULL, 0);
         } else {
             fprintf(stderr, "%s: invalid instruction %s, exiting\n", argv[0],
