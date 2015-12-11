@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/types.>
+#include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <errno.h>
@@ -19,12 +19,16 @@ int main(int argc, char **argv){
     int16_t instruction;
     char *addressString = "a";
 
+    if (argv[1] == NULL){
+        fprintf(stderr, "Usage: %s filename\n", argv[0]);
+        exit(4);
+    }
     asmsource = fopen(argv[1], "r");
-    if (stream == NULL){
-        perror(argv[1]);
+    if (asmsource == NULL){
+        perror("input file error");
         exit(1);
     }
-    outputImageFD = open("image.sdm", O_WRONLY, O_CREAT);
+    outputImageFD = open("image.sdm", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
     if (outputImageFD == -1){
         perror("cannot create output file");
         exit(2);
@@ -53,6 +57,33 @@ int main(int argc, char **argv){
         } else if (!strcmp(mnemonic, "jmp")){
             addressString = strtok(NULL, " ");
             instruction = 0x7000 + (int16_t)strtol(addressString, NULL, 0);
+        } else if (!strcmp(mnemonic, "jin")){
+            addressString = strtok(NULL, " ");
+            instruction = 0x8000 + (int16_t)strtol(addressString, NULL, 0);
+        } else if (!strcmp(mnemonic, "out")){
+            addressString = strtok(NULL, " ");
+            instruction = 0x9000 + (int16_t)strtol(addressString, NULL, 0);
+        } else if (!strcmp(mnemonic, "in")){
+            addressString = strtok(NULL, " ");
+            instruction = 0xA000 + (int16_t)strtol(addressString, NULL, 0);
+        } else if (!strcmp(mnemonic, "mova")){
+            addressString = strtok(NULL, " ");
+            instruction = 0xB000 + (int16_t)strtol(addressString, NULL, 0);
+        } else if (!strcmp(mnemonic, "movm")){
+            addressString = strtok(NULL, " ");
+            instruction = 0xC000 + (int16_t)strtol(addressString, NULL, 0);
+        } else if (!strcmp(mnemonic, "stoa")){
+            addressString = strtok(NULL, " ");
+            instruction = 0xD000 + (int16_t)strtol(addressString, NULL, 0);
+        } else if (!strcmp(mnemonic, "eq")){
+            addressString = strtok(NULL, " ");
+            instruction = 0xE000 + (int16_t)strtol(addressString, NULL, 0);
+        } else {
+            fprintf(stderr, "%s: invalid instruction %s, exiting\n", argv[0],
+                mnemonic);
+            exit(3);
         }
+        write(outputImageFD, &instruction, sizeof(int16_t));
     }
+    return 0;
 }
