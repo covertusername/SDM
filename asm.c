@@ -21,8 +21,7 @@ int main(int argc, char **argv){
 
     asmsource = fopen(argv[1], "r");
     if (stream == NULL){
-        fprintf(stderr, "%s: %s: No such file or directory\n", argv[0], 
-            argv[1]);
+        perror(argv[1]);
         exit(1);
     }
     outputImageFD = open("image.sdm", O_WRONLY, O_CREAT);
@@ -52,7 +51,8 @@ int main(int argc, char **argv){
             addressString = strtok(NULL, " ");
             instruction = 0x6000 + (int16_t)strtol(addressString, NULL, 0);
         } else if (!strcmp(mnemonic, "jmp")){
-            
+            addressString = strtok(NULL, " ");
+            instruction = 0x7000 + (int16_t)strtol(addressString, NULL, 0);
         }
     }
 }
