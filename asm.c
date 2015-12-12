@@ -18,7 +18,7 @@ int main(int argc, char **argv){
     char *mnemonic;
     int16_t instruction;
     char *addressString = "a";
-    char *delimitor = {' ', '\x0A', '\0'};
+    char delimitor[3] = {' ', '\x0A', '\0'};
 
     if (argv[1] == NULL){
         fprintf(stderr, "Usage: %s filename\n", argv[0]);
