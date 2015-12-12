@@ -48,6 +48,7 @@ int main(int argc, char **argv){
                 break;
             case 0xA000:
                 printf("in 0x%x\n", *instruction & 0x0FFF);
+                
         }
     }
 }
