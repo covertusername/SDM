@@ -10,45 +10,73 @@
 
 int main(int argc, char **argv){
     int imagefd = open("image.sdm", O_RDONLY);
-    int16_t *instruction = calloc(1, sizeof(int16_t));
-    int16_t temp = 0;
+    union {
+        int16_t word;
+        char bytesInWord[2];
+    } instruction;
+    char temp = 0;
+    int addr = 0;
 
-    while (read(imagefd, instruction, 2) > 0){
-        temp = *instruction & 0xF000;
+    while (read(imagefd, &instruction.bytesInWord[1], 1) > 0){
+        read(imagefd, &instruction.bytesInWord[0], 1);
+        temp = instruction.bytesInWord[1] & 0xF0;
         switch (temp){
-            case 0x0000:
-                printf("nop\n");
+            case '\x00':
+                printf("%x\tnop\n", addr);
                 break;
-            case 0x1000:
-                printf("adda 0x%x\n", *instruction & 0x0FFF);
+            case '\x10':
+                printf("%x\tadda 0x%x\n", addr, instruction.word & 0x0FFF);
                 break;
-            case 0x2000:
-                printf("addm 0x%x\n", *instruction & 0x0FFF);
+            case '\x20':
+                printf("%x\taddm 0x%x\n", addr, instruction.word & 0x0FFF);
                 break;
-            case 0x3000:
-                printf("suba 0x%x\n", *instruction & 0x0FFF);
+            case '\x30':
+                printf("%x\tsuba 0x%x\n", addr, instruction.word & 0x0FFF);
                 break;
-            case 0x4000:
-                printf("subm 0x%x\n", *instruction & 0x0FFF);
+            case '\x40':
+                printf("%x\tsubm 0x%x\n", addr, instruction.word & 0x0FFF);
                 break;
-            case 0x5000:
-                printf("cla\n");
+            case '\x50':
+                printf("%x\tcla\n", addr);
                 break;
-            case 0x6000:
-                printf("clm 0x%x\n", *instruction & 0x0FFF);
+            case '\x60':
+                printf("%x\tclm 0x%x\n", addr, instruction.word & 0x0FFF);
                 break;
-            case 0x7000:
-                printf("jmp 0x%x\n", *instruction & 0x0FFF);
+            case '\x70':
+                printf("%x\tjmp 0x%x\n", addr, instruction.word & 0x0FFF);
                 break;
-            case 0x8000:
-                printf("jin 0x%x\n", *instruction & 0x0FFF);
+            case '\x80':
+                printf("%x\tjin 0x%x\n", addr, instruction.word & 0x0FFF);
                 break;
-            case 0x9000:
-                printf("out 0x%x\n", *instruction & 0x0FFF);
+            case '\x90':
+                printf("%x\tout 0x%x\n", addr, instruction.word & 0x0FFF);
                 break;
-            case 0xA000:
-                printf("in 0x%x\n", *instruction & 0x0FFF);
-                
+            case '\xA0':
+                printf("%x\tin 0x%x\n", addr, instruction.word & 0x0FFF);
+                break;
+            case '\xB0':
+                printf("%x\tmova 0x%x\n", addr, instruction.word & 0x0FFF);
+                break;
+            case '\xC0':
+                printf("%x\tmovm 0x%x\n", addr, instruction.word & 0x0FFF);
+                break;
+            case '\xD0':
+                printf("%x\tstoa 0x%x\n", addr, instruction.word & 0x0FFF);
+                break;
+            case '\xE0':
+                printf("%x\teq 0x%x\n", addr, instruction.word & 0x0FFF);
+                break;
+            case '\xF0':
+                printf("%x\tui0 - this instruction (opcode 15) does not exist\n"
+                    , addr);
+                break;
+            default:
+                fprintf(stderr, "%s: opcode value out of range\n", argv[0]);
+                exit(1);
+                break;
         }
+        addr++;
+        addr++;
     }
+    return 0;
 }
