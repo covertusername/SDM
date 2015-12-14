@@ -67,8 +67,7 @@ int main(int argc, char **argv){
                 printf("%x\teq 0x%x\n", addr, instruction.word & 0x0FFF);
                 break;
             case '\xF0':
-                printf("%x\tui0 - this instruction (opcode 15) does not exist\n"
-                    , addr);
+                printf("%x\thlt\n", addr);
                 break;
             default:
                 fprintf(stderr, "%s: opcode value out of range\n", argv[0]);
