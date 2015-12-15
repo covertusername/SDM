@@ -21,6 +21,7 @@ char temp;
 char acc;
 int16_t arg;
 int running = 1;
+int jumped = 0;
 
 char out(int16_t arg);
 void in(int16_t arg, char acc);
@@ -62,11 +63,13 @@ int main(int argc, char **argv){
             case '\x70':
                 rIByte = arg;
                 lIByte = arg + 1;
+                jumped = 1;
                 break;
             case '\x80':
                 if (acc > 127){
                     rIByte = arg;
                     lIByte = arg + 1;
+                    jumped = 1;
                 }
                 break;
             case '\x90':
@@ -98,10 +101,13 @@ int main(int argc, char **argv){
                     argv[0]);
             break;
         }
-        rIByte++;
-        rIByte++;
-        lIByte++;
-        lIByte++;
+        if (!jumped){
+            rIByte++;
+            rIByte++;
+            lIByte++;
+            lIByte++;
+        }
+        jumped = 0;
     }
     free(memory);
     return 0;
