@@ -66,7 +66,7 @@ int main(int argc, char **argv){
                 jumped = 1;
                 break;
             case '\x80':
-                if (acc >= 128){
+                if (acc < 0){
                     lIByte = arg;
                     rIByte = arg + 1;
                     jumped = 1;
@@ -89,7 +89,7 @@ int main(int argc, char **argv){
                 break;
             case '\xE0':
                 if (acc == memory[arg]){
-                    acc = 255;
+                    acc = -128;
                 }
                 break;
             case '\xF0':
