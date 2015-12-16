@@ -61,14 +61,14 @@ int main(int argc, char **argv){
                 memory[arg] = 0;
                 break;
             case '\x70':
-                rIByte = arg;
-                lIByte = arg + 1;
+                lIByte = arg;
+                rIByte = arg + 1;
                 jumped = 1;
                 break;
             case '\x80':
-                if (acc > 127){
-                    rIByte = arg;
-                    lIByte = arg + 1;
+                if (acc >= 128){
+                    lIByte = arg;
+                    rIByte = arg + 1;
                     jumped = 1;
                 }
                 break;
