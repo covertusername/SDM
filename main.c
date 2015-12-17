@@ -22,6 +22,7 @@ char acc;
 int16_t arg;
 int running = 1;
 int jumped = 0;
+FILE *simlog;
 
 char out(int16_t arg);
 void in(int16_t arg, char acc);
@@ -32,6 +33,7 @@ int main(int argc, char **argv){
         perror(argv[1]);
         exit(1);
     }
+    simlog = fopen("sim.log", "w");
     memory = calloc(1, 4096);
     read(memoryImage, memory, 4096);
     while (running){
@@ -39,33 +41,43 @@ int main(int argc, char **argv){
         instruction.bytesInWord[0] = memory[rIByte];
         temp = instruction.bytesInWord[1] & 0xF0;
         arg = instruction.word & 0x0FFF;
+        fprintf(simlog, "acc: %i instruction: ", acc);
         switch (temp){
             case '\x00':
+                fprintf(simlog, "nop\n");
                 break;
             case '\x10':
+                fprintf(simlog, "adda 0x%x\n", arg);
                 acc = acc + memory[arg];
                 break;
             case '\x20':
+                fprintf(simlog, "addm 0x%x\n", arg);
                 memory[arg] = acc + memory[arg];
                 break;
             case '\x30':
+                fprintf(simlog, "suba 0x%x\n", arg);
                 acc = acc - memory[arg];
                 break;
             case '\x40':
+                fprintf(simlog, "subm 0x%x\n", arg);
                 memory[arg] = memory[arg] - acc;
                 break;
             case '\x50':
+                fprintf(simlog, "cla\n");
                 acc = 0;
                 break;
             case '\x60':
+                fprintf(simlog, "clm 0x%x\n", arg);
                 memory[arg] = 0;
                 break;
             case '\x70':
+                fprintf(simlog, "jmp 0x%x\n", arg);
                 lIByte = arg;
                 rIByte = arg + 1;
                 jumped = 1;
                 break;
             case '\x80':
+                fprintf(simlog, "jin 0x%x\n", arg);
                 if (acc < 0){
                     lIByte = arg;
                     rIByte = arg + 1;
@@ -73,26 +85,33 @@ int main(int argc, char **argv){
                 }
                 break;
             case '\x90':
+                fprintf(simlog, "out 0x%x\n", arg);
                 acc = out(arg);
                 break;
             case '\xA0':
+                fprintf(simlog, "in 0x%x\n", arg);
                 in(arg, acc);
                 break;
             case '\xB0':
+                fprintf(simlog, "mova 0x%x\n", arg);
                 acc = memory[arg];
                 break;
             case '\xC0':
+                fprintf(simlog, "movm 0x%x\n", arg);
                 memory[arg] = acc;
                 break;
             case '\xD0':
+                fprintf(simlog, "stoa 0x%x\n", arg);
                 acc = (char)arg;
                 break;
             case '\xE0':
+                fprintf(simlog, "eq 0x%x\n", arg);
                 if (acc == memory[arg]){
                     acc = -128;
                 }
                 break;
             case '\xF0':
+                fprintf(simlog, "hlt\n");
                 running = 0;
                 break;
             default:
