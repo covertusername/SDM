@@ -108,6 +108,8 @@ int main(int argc, char **argv){
                 fprintf(simlog, "eq 0x%x\n", arg);
                 if (acc == memory[arg]){
                     acc = -128;
+                } else {
+                    acc = 0;
                 }
                 break;
             case '\xF0':

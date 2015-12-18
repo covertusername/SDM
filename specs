@@ -13,7 +13,7 @@
 1100 - 12 - movm - move value in accumulator to address
 1101 - 13 - stoa - store argument into accumulator, uses last 8 bits only
 1110 - 14 - eq   - if accumulator and value at address are equal, store 255 into
-                   accumulator
+                   accumulator, else store 0 into the accumulator
 1111 - 15 - hlt  - halt the machine
 
 1010 | 101010101010
