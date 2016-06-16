@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdint.h>
+#include <string.h>
 
 char *memory;
 int memoryImage = 0;
@@ -23,6 +24,9 @@ int16_t arg;
 int running = 1;
 int jumped = 0;
 FILE *simlog;
+char protSequence = 0;
+char *call;
+int16_t pointer;
 
 char out(int16_t arg);
 void in(int16_t arg, char acc);
@@ -135,14 +139,25 @@ int main(int argc, char **argv){
 }
 
 char out(int16_t arg){
-    if (arg == 0x0){
+    if (arg == 0x0){ // generic stdin
         return getchar();
     }
     return 0;
 }
 
 void in(int16_t arg, char acc){
-    if (arg == 0x0){
+    if (arg == 0x0){ // generic stdout
         putchar(acc);
+    } else if (arg == 0x1) { // system call interface protocol
+        if (protSequence == 0){
+            if (acc == 0){
+                call = "open";
+                protSequence++;
+            }
+        } else if (protSequence == 1) {
+            if (!strcmp(call, "open")){
+                
+            }
+        }
     }
 }
