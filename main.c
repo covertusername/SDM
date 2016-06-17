@@ -156,7 +156,7 @@ void in(int16_t arg, char acc){
             }
         } else if (protSequence == 1) {
             if (!strcmp(call, "open")){
-                
+                ;
             }
         }
     }
