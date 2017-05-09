@@ -146,12 +146,21 @@ int main(int argc, char **argv){
 char out(int16_t arg){
     if (arg == 0x0){ // generic stdin
         return getchar();
+    } else if (arg == 0x1) { // retrieve the leftmost byte of the instruction
+        return lIByte;       // pointer
+    } else if (arg == 0x2) { // retrieve the rightmost byte of the instruction
+        return rIByte;       // pointer
     }
     return 0;
 }
 
 void in(int16_t arg, char acc){
-    if (arg == 0x0){ // generic stdout
+    if (arg == 0x0) { // generic stdout
         putchar(acc);
+    } else if (arg == 0x1) { // plug the rightmost 4 bits of the accumulator
+        lIByte = acc & 0x0F; // into the leftmost byte of the instruction
+                             // pointer
+    } else if (arg == 0x2) { // plug the accumulator into the rightmost byte
+        rIByte = acc;        // of the instruction pointer
     }
 }
