@@ -50,7 +50,7 @@ int main(int argc, char **argv){
         instruction.bytesInWord[0] = memory[rIByte];
         temp = instruction.bytesInWord[1] & 0xF0;
         arg = instruction.word & 0x0FFF;
-        fprintf(simlog, "acc: %i ip: %x instruction: ", acc, lIByte);
+        fprintf(simlog, "acc: %i ip: %i instruction: ", acc, lIByte);
         switch (temp){
             case '\x00':
                 fprintf(simlog, "nop\n");
