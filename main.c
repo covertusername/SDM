@@ -32,6 +32,15 @@ union {
     int16_t address;
     char bytesInAddress[2];
 } sdmAddress;
+typedef union {
+    int32_t integer;
+    char bytesInInt[4];
+} sdmInt;
+sdmInt openProtFlags;
+char *lastCall;
+sdmInt lastCallReturnInt;
+char *openProtFilename;
+char returnSequence = 0;
 
 char out(int16_t arg);
 void in(int16_t arg, char acc);
@@ -146,6 +155,12 @@ int main(int argc, char **argv){
 char out(int16_t arg){
     if (arg == 0x0){ // generic stdin
         return getchar();
+    } else if (arg == 0x1) { // gets the return value of the last system call
+        if (!strcmp(lastCall, "open")){
+            if (returnSequence == 0){
+                ; // not yet finished
+            }
+        }
     }
     return 0;
 }
@@ -153,5 +168,46 @@ char out(int16_t arg){
 void in(int16_t arg, char acc){
     if (arg == 0x0){ // generic stdout
         putchar(acc);
+    } else if (arg == 0x1) { // system call interface protocol
+        if (protSequence == 0){
+            if (acc == 0){
+                call = "open";
+                protSequence++;
+            }
+        } else if (protSequence == 1) {
+            if (!strcmp(call, "open")){
+                sdmAddress.bytesInAddress[1] = acc;
+                protSequence++;
+            }
+        } else if (protSequence == 2) {
+            if (!strcmp(call, "open")){
+                sdmAddress.bytesInAddress[0] = acc;
+                protSequence++;
+            }
+        } else if (protSequence == 3) {
+            if (!strcmp(call, "open")){
+                openProtFlags.bytesInInt[3] = acc;
+                protSequence++;
+            }
+        } else if (protSequence == 4) {
+            if (!strcmp(call, "open")){
+                openProtFlags.bytesInInt[2] = acc;
+                protSequence++;
+            }
+        } else if (protSequence == 5) {
+            if (!strcmp(call, "open")){
+                openProtFlags.bytesInInt[1] = acc;
+                protSequence++;
+            }
+        } else if (protSequence == 6) {
+            if (!strcmp(call, "open")){
+                openProtFlags.bytesInInt[0] = acc;
+                protSequence = 0;
+                lastCall = "open";
+                openProtFilename = memory + sdmAddress.address;
+                lastCallReturnInt.integer = open(openProtFilename,
+                    openProtFlags.integer);
+            }
+        }
     }
 }
